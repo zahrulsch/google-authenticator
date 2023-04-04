@@ -1,5 +1,7 @@
+use google_authenticator::GAError;
 use sea_orm::error::DbErr as DatabaseError;
 use serde::{ser::SerializeStruct, Serialize};
+
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -29,6 +31,8 @@ pub enum OhMyError {
     Database(#[from] DatabaseError),
     #[error("common error")]
     Common(#[from] MyError),
+    #[error("ga error")]
+    Ga(#[from] GAError),
 }
 
 impl Serialize for OhMyError {
@@ -46,6 +50,10 @@ impl Serialize for OhMyError {
             OhMyError::Common(e) => {
                 seq.serialize_field("name", &e.name)?;
                 seq.serialize_field("cause", &e.cause)?;
+            }
+            OhMyError::Ga(e) => {
+                seq.serialize_field("name", "GAError")?;
+                seq.serialize_field("cause", &e.to_string())?;
             }
         }
 

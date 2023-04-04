@@ -1,12 +1,12 @@
-import { Card, Space, Input, Button, Typography, message } from "antd"
-import { ArrowLeftOutlined } from "@ant-design/icons"
-import { useNavigate } from "react-router-dom"
-import { useState } from "react"
-import sendQuery from "../ipc/sendQuery"
+import { Card, Space, Input, Button, Typography, message } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import sendQuery from "../ipc/sendQuery";
 
 const Title = () => {
-    const navigate = useNavigate()
-    
+    const navigate = useNavigate();
+
     return (
         <Space align="center" size="small">
             <Button
@@ -14,17 +14,17 @@ const Title = () => {
                 size="small"
                 icon={<ArrowLeftOutlined style={{ fontSize: "11px" }} />}
                 onClick={() => navigate(-1)}
-                ></Button>
+            ></Button>
             <Typography.Title style={{ margin: 0 }} level={5}>
                 Tambahkan Profile
             </Typography.Title>
         </Space>
-    )
-}
+    );
+};
 
 const AddProfile = () => {
-    const navigate = useNavigate()
-    const [msg, ctx] = message.useMessage()
+    const navigate = useNavigate();
+    const [msg, ctx] = message.useMessage();
     const { fn } = sendQuery("add_profile", null, {
         onSuccess() {
             msg.success({
@@ -33,8 +33,8 @@ const AddProfile = () => {
                 style: {
                     marginTop: "28px",
                 },
-            })
-            navigate(-1)
+            });
+            navigate(-1);
         },
         onError(e) {
             msg.error({
@@ -43,17 +43,17 @@ const AddProfile = () => {
                 style: {
                     marginTop: "28px",
                 },
-            })
+            });
         },
-    })
+    });
     const [payload, setPayload] = useState({
         name: "",
         authCode: "",
-    })
+    });
 
     const sendIpc = () => {
-        fn({ ...payload })
-    }
+        fn({ ...payload });
+    };
 
     return (
         <Card
@@ -73,18 +73,20 @@ const AddProfile = () => {
                         setPayload((p) => ({
                             ...p,
                             name: e.target.value,
-                        }))
+                        }));
                     }}
                     allowClear
+                    spellCheck={false}
                     placeholder="Nama profile"
                 />
                 <Input
                     value={payload.authCode}
+                    spellCheck={false}
                     onChange={(e) => {
                         setPayload((p) => ({
                             ...p,
                             authCode: e.target.value,
-                        }))
+                        }));
                     }}
                     allowClear
                     placeholder="Authenticator Code"
@@ -105,7 +107,7 @@ const AddProfile = () => {
                 </Card>
             </Space>
         </Card>
-    )
-}
+    );
+};
 
-export default AddProfile
+export default AddProfile;

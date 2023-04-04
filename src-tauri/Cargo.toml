@@ -9,14 +9,16 @@ edition = "2021"
 
 [build-dependencies]
 tauri-build = { version = "1.2", features = [] }
+winres = "0.1.12"
 
 [dependencies]
 serde_json = "1.0"
 thiserror = "1.0.38"
+google-authenticator = "0.3.0"
 sea-orm = { version = "^0", features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ] }
 tokio = { version = "1.25.0", features = [ "full" ] }
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = ["clipboard-all", "shell-open", "window-close", "window-hide", "window-maximize", "window-minimize", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
+tauri = { version = "1.2", features = ["clipboard-all", "fs-read-dir", "fs-read-file", "fs-write-file", "shell-open", "window-close", "window-hide", "window-maximize", "window-minimize", "window-set-always-on-top", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
 migration = { path = "migration" }
 entity = { path = "entity" }
 
@@ -27,3 +29,10 @@ default = ["custom-protocol"]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
 custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+opt-level = "z"
+debug = 0
+strip = true
+lto = true
+codegen-units = 16

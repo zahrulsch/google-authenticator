@@ -3,6 +3,7 @@ import styled from "styled-components"
 type ButtonProp = {
     readonly btnType?: "exit" | "minimize"
     readonly iconSize?: number
+    readonly secondary?: boolean
 }
 
 const Button = styled.button<ButtonProp>`
@@ -30,6 +31,7 @@ const Button = styled.button<ButtonProp>`
         color: ${(props) => (props.btnType === "exit" ? "#a02669" : "#bfbfbf")};
         font-weight: 600;
         transition: 200ms ease;
+        color:  ${(props) => (props.secondary ? "#575757 !important" : "")};
     }
 `
 

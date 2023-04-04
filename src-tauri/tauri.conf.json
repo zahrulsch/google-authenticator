@@ -12,6 +12,12 @@
   },
   "tauri": {
     "allowlist": {
+      "fs": {
+        "scope": ["$RESOURCE/data/database.db"],
+        "readFile": true,
+        "readDir": true,
+        "writeFile": true
+      },
       "all": false,
       "shell": {
         "all": false,
@@ -26,14 +32,15 @@
         "minimize": true,
         "unmaximize": true,
         "unminimize": true,
-        "startDragging": true
+        "startDragging": true,
+        "setAlwaysOnTop": true
       },
       "clipboard": {
         "all": true
       }
     },
     "bundle": {
-      "active": false,
+      "active": true,
       "category": "DeveloperTool",
       "copyright": "",
       "deb": {
@@ -56,7 +63,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": ["data/database.db"],
       "shortDescription": "",
       "targets": "all",
       "windows": {

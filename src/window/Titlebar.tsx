@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import { Typography, Popover, Divider } from "antd"
+import styled from "styled-components";
+import { Typography, Popover, Divider } from "antd";
 import {
     CloseCircleFilled,
     MinusCircleFilled,
@@ -7,19 +7,25 @@ import {
     HomeFilled,
     ArrowLeftOutlined,
     InfoCircleFilled,
-} from "@ant-design/icons"
-import { appWindow } from "@tauri-apps/api/window"
-import { CSSProperties, PropsWithChildren, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Button from "./Button"
-import Menuitem from "./Menuitem"
+    PushpinFilled,
+} from "@ant-design/icons";
+import { appWindow } from "@tauri-apps/api/window";
+import { CSSProperties, PropsWithChildren, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import Menuitem from "./Menuitem";
 
 type TitlebarProp = {
-    readonly style?: CSSProperties
-}
+    readonly style?: CSSProperties;
+};
 
 export default function Titlebar(props: PropsWithChildren & TitlebarProp) {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const [pinned, setPinned] = useState(!1);
+    const pin = async () => {
+        setPinned(p => p = !p)
+        await appWindow.setAlwaysOnTop(!pinned)
+    }
 
     return (
         <Container
@@ -40,30 +46,34 @@ export default function Titlebar(props: PropsWithChildren & TitlebarProp) {
                     <MenuOutlined />
                 </Button>
             </Popover>
+            <Button onClick={pin} secondary={!pinned}>
+                <PushpinFilled />
+            </Button>
             <Typography.Text className="title-header" data-tauri-drag-region>
                 Google Authenticator
             </Typography.Text>
             <Button onClick={() => appWindow.minimize()}>
                 <MinusCircleFilled />
             </Button>
+
             <Button onClick={() => appWindow.close()} btnType="exit">
                 <CloseCircleFilled />
             </Button>
         </Container>
-    )
+    );
 }
 
 const Menulist = (props?: { onclick?: () => void }) => {
-   const nav = useNavigate()
+    const nav = useNavigate();
 
     const navigate = (href: string | number) => {
-        props?.onclick?.()
+        props?.onclick?.();
         if (typeof href === "string") {
-            nav(href)
+            nav(href);
         } else if (typeof href === "number" && href === -1) {
-            nav(-1)
+            nav(-1);
         }
-    }
+    };
 
     return (
         <div
@@ -77,10 +87,7 @@ const Menulist = (props?: { onclick?: () => void }) => {
             <Menuitem onClick={() => navigate("/")} active>
                 <HomeFilled /> Layar Utama
             </Menuitem>
-            <Menuitem
-                onClick={() => navigate(-1)}
-                active
-            >
+            <Menuitem onClick={() => navigate(-1)} active>
                 <ArrowLeftOutlined />
                 Kembali
             </Menuitem>
@@ -90,8 +97,8 @@ const Menulist = (props?: { onclick?: () => void }) => {
                 Info Aplikasi
             </Menuitem>
         </div>
-    )
-}
+    );
+};
 
 const Container = styled.div`
     width: 100%;
@@ -99,7 +106,7 @@ const Container = styled.div`
     padding: 6px 10px;
     align-items: center;
     box-sizing: border-box;
-    column-gap: 2px;
+    column-gap: 5px;
     background-color: rgba(38, 38, 38, 0.5);
     border-bottom: 1px solid #262626;
 
@@ -109,4 +116,4 @@ const Container = styled.div`
         text-align: center;
         font-weight: 600;
     }
-`
+`;

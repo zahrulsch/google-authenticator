@@ -1,5 +1,4 @@
 use crate::prelude::*;
-// use sea_orm::JsonValue;
 use entity::profile;
 use sea_orm::{ColumnTrait, EntityTrait, JsonValue, PaginatorTrait, QueryFilter, QueryOrder};
 use serde::{Deserialize, Serialize};
@@ -18,12 +17,13 @@ pub async fn get_profiles(
     page: Option<u64>,
 ) -> Result<Profiles> {
     let db = state.db.clone();
-    let page = page.unwrap_or(0);
+    let page = page.unwrap_or(1);
     let mut profiles_pages = profile::Entity::find();
 
     if let Some(name) = name {
         if !name.is_empty() {
-            profiles_pages = profiles_pages.filter(profile::Column::Name.like(&name));
+            profiles_pages =
+                profiles_pages.filter(profile::Column::Name.like(&format!("%{}%", &name)));
         }
     }
 
@@ -32,7 +32,7 @@ pub async fn get_profiles(
         .into_json()
         .paginate(&*db, 10);
 
-    let profiles = end.fetch_page(page).await?;
+    let profiles = end.fetch_page(page - 1).await?;
     let count = end.num_items().await?;
     let pages = end.num_pages().await?;
 
